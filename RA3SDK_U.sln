@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetTypeHashHeaderFixer", "..\AssetTypeHashHeaderFixer\AssetTypeHashHeaderFixer.csproj", "{258090AF-140B-4000-9CE2-B59C3CB9E822}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetTypeHashHeaderFixer", "AssetTypeHashHeaderFixer\AssetTypeHashHeaderFixer.csproj", "{258090AF-140B-4000-9CE2-B59C3CB9E822}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SageBinImpReloHeaderFixer", "..\SageBinImpReloHeaderFixer\SageBinImpReloHeaderFixer.csproj", "{0B19E9DE-2902-424A-9D66-E726C21FA00A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SageBinImpReloHeaderFixer", "SageBinImpReloHeaderFixer\SageBinImpReloHeaderFixer.csproj", "{0B19E9DE-2902-424A-9D66-E726C21FA00A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SageManifestAssetFixer", "..\SageManifestAssetFixer\SageManifestAssetFixer.csproj", "{5965AE71-4274-4FD3-9E1E-4F96F10BEFF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SageManifestAssetFixer", "SageManifestAssetFixer\SageManifestAssetFixer.csproj", "{5965AE71-4274-4FD3-9E1E-4F96F10BEFF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringTrapper", "..\StringTrapper\StringTrapper.csproj", "{3D9103F6-0724-4A86-9FBA-62BB7BEE61B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SageManifestHeaderFixer", "SageManifestHeaderFixer\SageManifestHeaderFixer.csproj", "{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeHashReader", "..\TypeHashReader\TypeHashReader.csproj", "{04C80913-8FAF-4EC9-B3BC-2FE04A33CA76}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringTrapper", "StringTrapper\StringTrapper.csproj", "{3D9103F6-0724-4A86-9FBA-62BB7BEE61B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SageManifestHeaderFixer", "..\SageManifestHeaderFixer\SageManifestHeaderFixer.csproj", "{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeHashReader", "TypeHashReader\TypeHashReader.csproj", "{04C80913-8FAF-4EC9-B3BC-2FE04A33CA76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +33,10 @@ Global
 		{5965AE71-4274-4FD3-9E1E-4F96F10BEFF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5965AE71-4274-4FD3-9E1E-4F96F10BEFF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5965AE71-4274-4FD3-9E1E-4F96F10BEFF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D9103F6-0724-4A86-9FBA-62BB7BEE61B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3D9103F6-0724-4A86-9FBA-62BB7BEE61B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D9103F6-0724-4A86-9FBA-62BB7BEE61B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,10 +45,6 @@ Global
 		{04C80913-8FAF-4EC9-B3BC-2FE04A33CA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04C80913-8FAF-4EC9-B3BC-2FE04A33CA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04C80913-8FAF-4EC9-B3BC-2FE04A33CA76}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B1DF04C-08BA-40E9-A1B9-5AD15BFC9B46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

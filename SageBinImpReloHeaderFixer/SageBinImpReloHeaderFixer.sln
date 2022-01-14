@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SageBinImpReloHeaderFixer", "SageBinImpReloHeaderFixer.csproj", "{0B19E9DE-2902-424A-9D66-E726C21FA00A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B19E9DE-2902-424A-9D66-E726C21FA00A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B19E9DE-2902-424A-9D66-E726C21FA00A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B19E9DE-2902-424A-9D66-E726C21FA00A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B19E9DE-2902-424A-9D66-E726C21FA00A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0C2B3693-2AF0-46F8-8C43-E68535DC8802}
+	EndGlobalSection
+EndGlobal
