@@ -56,8 +56,23 @@ namespace SageBinImpReloHeaderFixer
         static void ChangeDirectory(DirectoryInfo directory)
         {
             Console.WriteLine("BIR Open D:" + directory.FullName);
-            foreach (FileInfo f in directory.GetFiles())
+
+            
+            foreach (FileInfo f in directory.GetFiles("*.bin",SearchOption.AllDirectories))
             {
+                Console.WriteLine("Bin Open D:" + directory.FullName);
+                ChangeFile(f);
+            }
+
+            foreach (FileInfo f in directory.GetFiles("*.imp", SearchOption.AllDirectories))
+            {
+                Console.WriteLine("Imp Open D:" + directory.FullName);
+                ChangeFile(f);
+            }
+
+            foreach (FileInfo f in directory.GetFiles("*.relo", SearchOption.AllDirectories))
+            {
+                Console.WriteLine("Relo Open D:" + directory.FullName);
                 ChangeFile(f);
             }
 

@@ -60,6 +60,10 @@ namespace SageManifestAssetFixer
         static Dictionary<int, byte> origin_data = new Dictionary<int, byte>();
         static Dictionary<int, byte> target_data = new Dictionary<int, byte>();
 
+        static List<DataBlock> ManifestBlockList = new List<DataBlock>();
+
+        static int ManifestBlockNumber = 0;
+
         static void Main(string[] args)
         {
             Stopwatch sw = new Stopwatch();
@@ -419,6 +423,113 @@ namespace SageManifestAssetFixer
 
         }
 
+        static void BuildManifest()
+        {
+
+            int start = 0 + 47 + 4 + 1;
+            Console.WriteLine("Start:{0}",start);
+            DataBlock db = new DataBlock();
+
+            //for (int c = 0; c < FileBytes.Length; c++)
+            //{
+            //    Console.Write("{1}:{0:X2} ", FileBytes[0 + c], c + 0);
+            //}
+            //Console.WriteLine();
+
+            for (int i = 0; i < ManifestBlockNumber; i++)
+            {
+                byte[] tid = new byte[4];
+                byte[] iid = new byte[4];
+                byte[] th = new byte[4];
+                byte[] ih = new byte[4];
+
+                //Console.WriteLine("{1}tid:{0}", start + (i * 48) + 0, i);
+                //Console.WriteLine("{1}tid:{0}", start + (i * 48) + 1, i);
+                //Console.WriteLine("{1}tid:{0}", start + (i * 48) + 2, i);
+                //Console.WriteLine("{1}tid:{0}", start + (i * 48) + 3, i);
+
+                //Console.WriteLine("{1}iid:{0}", start + (i * 48) + 4, i);
+                //Console.WriteLine("{1}iid:{0}", start + (i * 48) + 5, i);
+                //Console.WriteLine("{1}iid:{0}", start + (i * 48) + 6, i);
+                //Console.WriteLine("{1}iid:{0}", start + (i * 48) + 7, i);
+
+                //Console.WriteLine("{1}th:{0}", start + (i * 48) + 8, i);
+                //Console.WriteLine("{1}th:{0}", start + (i * 48) + 9, i);
+                //Console.WriteLine("{1}th:{0}", start + (i * 48) + 10, i);
+                //Console.WriteLine("{1}th:{0}", start + (i * 48) + 11, i);
+
+                //Console.WriteLine("{1}ih:{0}", start + (i * 48) + 12, i);
+                //Console.WriteLine("{1}ih:{0}", start + (i * 48) + 13, i);
+                //Console.WriteLine("{1}ih:{0}", start + (i * 48) + 14, i);
+                //Console.WriteLine("{1}ih:{0}", start + (i * 48) + 15, i);
+
+                int offset = i * 48;
+
+                for (int c = 0; c < 16; c++)
+                {
+                    Console.Write("{1}:{0:X2} ",FileBytes[start +offset + c],c + start +offset );
+                }
+                Console.WriteLine();
+
+                tid[0] = FileBytes[start + offset + 0];
+                tid[1] = FileBytes[start + offset + 1];
+                tid[2] = FileBytes[start + offset + 2];
+                tid[3] = FileBytes[start + offset + 3];
+
+                iid[0] = FileBytes[start + offset + 4];
+                iid[1] = FileBytes[start + offset + 5];
+                iid[2] = FileBytes[start + offset + 6];
+                iid[3] = FileBytes[start + offset + 7];
+
+                th[0] = FileBytes[start + offset + 8];
+                th[1] = FileBytes[start + offset + 9];
+                th[2] = FileBytes[start + offset + 10];
+                th[3] = FileBytes[start + offset + 11];
+
+                ih[0] = FileBytes[start + offset + 12];
+                ih[1] = FileBytes[start + offset + 13];
+                ih[2] = FileBytes[start + offset + 14];
+                ih[3] = FileBytes[start + offset + 15];
+
+                db.TypeID = tid;
+                db.InstanceHash = ih;
+                db.InstanceID = iid;
+                db.TypeHash = th;
+
+
+                Console.WriteLine("{4}:TypeId {0} InstanceId {1} TypeHash {2} InstanceHash {3}", ByteStringBuilder(tid), ByteStringBuilder(iid), ByteStringBuilder(th), ByteStringBuilder(ih), i);
+
+                
+
+                if (map.ContainsKey(ByteStringBuilder(db.TypeID)))
+                {
+
+                    db.Name = map[ByteStringBuilder(db.TypeID)].Name;
+                    DataBlock ndb = map[ByteStringBuilder(db.TypeID)];
+
+                    Console.WriteLine("Found {0}",db.Name);
+                    Console.WriteLine("!Write!:{0} To {1}", ByteStringBuilder(db.TypeHash), ByteStringBuilder(ndb.TypeHash));
+
+                    FileBytes[start + offset + 8] = ndb.TypeHash[0];
+                    FileBytes[start + offset + 9] = ndb.TypeHash[1];
+                    FileBytes[start + offset + 10] = ndb.TypeHash[2];
+                    FileBytes[start + offset + 11] = ndb.TypeHash[3];
+
+                }
+                else
+                {
+                    Console.WriteLine("!Warning!:{0} Is not alive in map.",ByteStringBuilder(db.TypeID));
+;                }
+
+                ManifestBlockList.Add(db);
+
+            }
+
+
+
+
+        }
+
 
         static void ChangeFile(FileInfo file)
         {
@@ -447,6 +558,17 @@ namespace SageManifestAssetFixer
             {
                 Console.WriteLine("THIS IS VERSION 7 MANIFEST.");
                 FileBytes = File.ReadAllBytes(file.FullName);
+
+                byte[] b = new byte[4];
+                b[0] = FileBytes[15 + 1];
+                b[1] = FileBytes[15 + 2];
+                b[2] = FileBytes[15 + 3];
+                b[3] = FileBytes[15 + 4];
+
+                
+
+                ManifestBlockNumber = BitConverter.ToInt32(b,0);
+                Console.WriteLine("TypeHash Number:{0} {1}", ByteStringBuilder(b),ManifestBlockNumber);
                 DoTask();
                 File.WriteAllBytes(file.FullName, FileBytes);
             }
@@ -493,125 +615,130 @@ namespace SageManifestAssetFixer
 
         static void DoTask()
         {
-            int number = 0;
             Console.WriteLine("[SLOW]Try To Hack...");
-            foreach (DataBlock db in list)
-            {
-                Console.WriteLine("[{1}/{0}]Search {2} Header {3}", list.Count, number + 1, db.Name, ByteStringBuilder(db.TypeID));
-                HardDataBlock hdb = new HardDataBlock();
-                if (!hdb_map.ContainsKey(db.Name))
-                {
-                    Console.WriteLine("Break {0} Beacause This is not in HDB List!", db.Name);
-
-                    continue;
-                }
-                else
-                {
-
-                    hdb = hdb_map[db.Name];
-                    Console.WriteLine("Get {0} Name {1}", db.Name, hdb.Name_0);
-
-                    if (String.IsNullOrEmpty(hdb.Name_0))
-                    {
-                        Console.WriteLine("Wrong!Pass!", db.Name, hdb.Name_0);
-                        continue;
-                    }
-
-                }
-
-                int count = 0;
-
-                for (int i = 0; i < FileBytes.Length; i++)
-                {
-
-                    if (FileBytes[i] == db.TypeID[count])
-                    {
-                        count++;
-                        Console.WriteLine("Match {0} Data {1} At {2}", count, FileBytes[i].ToString("X2"), i);
-                    }
-
-                    if (count > db.TypeID.Length)
-                    {
-                        throw new Exception("Count > " + db.TypeID.Length);
-                    }
-
-                    if (count == db.TypeID.Length)
-                    {
-                        Console.WriteLine("Match {0}", db.Name);
-                        Console.WriteLine("SKIP 4 NEW CURSOR: {0}", i);
-
-                        byte[] checkD = new byte[4];
-                        byte[] checkA = new byte[4];
-                        byte[] checkB = new byte[4];
-                        byte[] checkC = new byte[4];
-
-
-                        checkD[0] = FileBytes[i - 4 + 1 + 0];
-                        checkD[1] = FileBytes[i - 4 + 1 + 1];
-                        checkD[2] = FileBytes[i - 4 + 1 + 2];
-                        checkD[3] = FileBytes[i - 4 + 1 + 3];
-
-                        checkA[0] = FileBytes[i + 0 + 1 + 0];
-                        checkA[1] = FileBytes[i + 0 + 1 + 1];
-                        checkA[2] = FileBytes[i + 0 + 1 + 2];
-                        checkA[3] = FileBytes[i + 0 + 1 + 3];
-
-                        checkB[0] = FileBytes[i + 4 + 1 + 0];
-                        checkB[1] = FileBytes[i + 4 + 1 + 1];
-                        checkB[2] = FileBytes[i + 4 + 1 + 2];
-                        checkB[3] = FileBytes[i + 4 + 1 + 3];
-
-                        checkC[0] = FileBytes[i + 8 + 1 + 0];
-                        checkC[1] = FileBytes[i + 8 + 1 + 1];
-                        checkC[2] = FileBytes[i + 8 + 1 + 2];
-                        checkC[3] = FileBytes[i + 8 + 1 + 3];
-
-                        Console.WriteLine("{0} {1} {2} {3}",ByteStringBuilder(checkD), ByteStringBuilder(checkB), ByteStringBuilder(checkA), ByteStringBuilder(checkC));
-
-                        Console.WriteLine("Check Data {0} With {1}", ByteStringBuilder(checkB), ByteStringBuilder(hdb.TypeHash_0));
-
-                        if (checkB.Equals(hdb.TypeHash_0))
-                        {
-                            Console.WriteLine("Can Write!");
-
-                            for (count = 0; count < db.TypeHash.Length; count++)
-                            {
-                                if (FileBytes[i + 4 + 1].Equals(db.TypeHash[count]))
-                                {
-                                    Console.WriteLine("Pass {0} Beacause {1}  At {2}", FileBytes[i].ToString("X2"), db.TypeHash[count].ToString("X2"), i);
-                                }
-                                else
-                                {
-
-
-                                    Console.WriteLine("Write {0} To {1}  At {2}", FileBytes[i].ToString("X2"), db.TypeHash[count].ToString("X2"), i);
-                                    origin_data.Add(i + 4 + 1, FileBytes[i + 4 + 1]);
-                                    target_data.Add(i + 4 + 1, db.TypeHash[count]);
-                                    FileBytes[i + 4 + 1] = db.TypeHash[count];
-                                }
+            BuildManifest();
+            return;
+            //int number = 0;
 
 
 
-                                i++;
-                            }
+            //foreach (DataBlock db in list)
+            //{
+            //    Console.WriteLine("[{1}/{0}]Search {2} Header {3}", list.Count, number + 1, db.Name, ByteStringBuilder(db.TypeID));
+            //    HardDataBlock hdb = new HardDataBlock();
+            //    if (!hdb_map.ContainsKey(db.Name))
+            //    {
+            //        Console.WriteLine("Break {0} Beacause This is not in HDB List!", db.Name);
 
-                        }
-                        else
-                        {
-                            Console.WriteLine("Cannot Write!");
-                        }
+            //        continue;
+            //    }
+            //    else
+            //    {
+
+            //        hdb = hdb_map[db.Name];
+            //        Console.WriteLine("Get {0} Name {1}", db.Name, hdb.Name_0);
+
+            //        if (String.IsNullOrEmpty(hdb.Name_0))
+            //        {
+            //            Console.WriteLine("Wrong!Pass!", db.Name, hdb.Name_0);
+            //            continue;
+            //        }
+
+            //    }
+
+            //    int count = 0;
+
+            //    for (int i = 0; i < FileBytes.Length; i++)
+            //    {
+
+            //        if (FileBytes[i] == db.TypeID[count])
+            //        {
+            //            count++;
+            //            Console.WriteLine("Match {0} Data {1} At {2}", count, FileBytes[i].ToString("X2"), i);
+            //        }
+
+            //        if (count > db.TypeID.Length)
+            //        {
+            //            throw new Exception("Count > " + db.TypeID.Length);
+            //        }
+
+            //        if (count == db.TypeID.Length)
+            //        {
+            //            Console.WriteLine("Match {0}", db.Name);
+            //            Console.WriteLine("SKIP 4 NEW CURSOR: {0}", i);
+
+            //            byte[] checkD = new byte[4];
+            //            byte[] checkA = new byte[4];
+            //            byte[] checkB = new byte[4];
+            //            byte[] checkC = new byte[4];
+
+
+            //            checkD[0] = FileBytes[i - 4 + 1 + 0];
+            //            checkD[1] = FileBytes[i - 4 + 1 + 1];
+            //            checkD[2] = FileBytes[i - 4 + 1 + 2];
+            //            checkD[3] = FileBytes[i - 4 + 1 + 3];
+
+            //            checkA[0] = FileBytes[i + 0 + 1 + 0];
+            //            checkA[1] = FileBytes[i + 0 + 1 + 1];
+            //            checkA[2] = FileBytes[i + 0 + 1 + 2];
+            //            checkA[3] = FileBytes[i + 0 + 1 + 3];
+
+            //            checkB[0] = FileBytes[i + 4 + 1 + 0];
+            //            checkB[1] = FileBytes[i + 4 + 1 + 1];
+            //            checkB[2] = FileBytes[i + 4 + 1 + 2];
+            //            checkB[3] = FileBytes[i + 4 + 1 + 3];
+
+            //            checkC[0] = FileBytes[i + 8 + 1 + 0];
+            //            checkC[1] = FileBytes[i + 8 + 1 + 1];
+            //            checkC[2] = FileBytes[i + 8 + 1 + 2];
+            //            checkC[3] = FileBytes[i + 8 + 1 + 3];
+
+            //            Console.WriteLine("{0} {1} {2} {3}",ByteStringBuilder(checkD), ByteStringBuilder(checkB), ByteStringBuilder(checkA), ByteStringBuilder(checkC));
+
+            //            Console.WriteLine("Check Data {0} With {1}", ByteStringBuilder(checkB), ByteStringBuilder(hdb.TypeHash_0));
+
+            //            if (checkB.Equals(hdb.TypeHash_0))
+            //            {
+            //                Console.WriteLine("Can Write!");
+
+            //                for (count = 0; count < db.TypeHash.Length; count++)
+            //                {
+            //                    if (FileBytes[i + 4 + 1].Equals(db.TypeHash[count]))
+            //                    {
+            //                        Console.WriteLine("Pass {0} Beacause {1}  At {2}", FileBytes[i].ToString("X2"), db.TypeHash[count].ToString("X2"), i);
+            //                    }
+            //                    else
+            //                    {
+
+
+            //                        Console.WriteLine("Write {0} To {1}  At {2}", FileBytes[i].ToString("X2"), db.TypeHash[count].ToString("X2"), i);
+            //                        origin_data.Add(i + 4 + 1, FileBytes[i + 4 + 1]);
+            //                        target_data.Add(i + 4 + 1, db.TypeHash[count]);
+            //                        FileBytes[i + 4 + 1] = db.TypeHash[count];
+            //                    }
 
 
 
-                        count = 0;
+            //                    i++;
+            //                }
+
+            //            }
+            //            else
+            //            {
+            //                Console.WriteLine("Cannot Write!");
+            //            }
 
 
-                    }
+
+            //            count = 0;
 
 
-                }
-                number++;
-            }
+            //        }
+
+
+            //    }
+            //    number++;
+            //}
 
 
 
