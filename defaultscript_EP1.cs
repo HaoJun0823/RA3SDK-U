@@ -174,7 +174,7 @@ namespace EALABuild
 			}
 			
 			// User Data Leaf Name
-			Reg = Registry.GetValue("HKEY_LOCAL_MACHINE\\Software\\Electronic Arts\\Electronic Arts\\Red Alert 3", "UserDataLeafName", null);
+			Reg = Registry.GetValue("HKEY_LOCAL_MACHINE\\Software\\Electronic Arts\\Electronic Arts\\Red Alert 3 Uprising", "UserDataLeafName", null);
 			if (Reg == null) { 
 				Reg = Registry.GetValue("HKEY_LOCAL_MACHINE\\Software\\Wow6432Node\\Electronic Arts\\Electronic Arts\\Red Alert 3 Uprising", "UserDataLeafName", null);
 				if (Reg == null) { 
@@ -185,6 +185,8 @@ namespace EALABuild
 			} else {
 				UserDataLeafName = Reg.ToString();
 			}
+			//CNC Launcher 3 Support
+			UserDataLeafName = "Red Alert 3 Uprising";
 			
 			// Variables
 			BuiltModsPath = SDKDirectory + "\\builtmods_ep1";
